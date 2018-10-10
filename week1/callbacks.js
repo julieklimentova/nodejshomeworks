@@ -19,15 +19,12 @@ callSwapi('people/1', (err, response, body) => {
   });
 
  vehiclesSpecific.map((spec) => {
-    return (
-      callSwapi(spec, (err, response, body) => {
-        let vehicleResult = JSON.parse(body);
-        let vehicleName = vehicleResult.name;
-        console.log(vehicleName);
-        return vehicleName;
-      })
-    )
-  });
+   callSwapi(spec, (err, response, body) => {
+     let vehicleResult = JSON.parse(body);
+     let vehicleName = vehicleResult.name;
+     console.log(vehicleName);
+   })
+ });
 });
 
 
