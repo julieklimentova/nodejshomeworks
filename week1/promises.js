@@ -13,7 +13,6 @@ function callSwapi(specificUrl) {
 }
 
 
-
 callSwapi('people/1')
   .then((result) => {
     let luke = JSON.parse(result);
@@ -36,4 +35,6 @@ callSwapi('people/1')
   });
   console.log(vehiclesNames);
   return vehiclesNames;
+}).catch((err) => {
+  console.log(err);
 });
