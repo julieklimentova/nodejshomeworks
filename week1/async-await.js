@@ -11,21 +11,26 @@ function callSwapi(subUrl) {
 }
 
 async function run() {
-  const luke = await callSwapi('people/1');
-  const lukeObject = JSON.parse(luke);
-  const vehiclesArray = lukeObject.vehicles;
-  const vehiclesUrls = vehiclesArray.map((vehicle) => {
-    return vehicle.slice(21);
-  });
-  let vehicles = vehiclesUrls.map((url)=> {
-    return callSwapi(url);
-  });
-  const vehiclesData = await Promise.all(vehicles);
-  let vehiclesNames = vehiclesData.map((vehicleData) => {
-    let vehicleObject = JSON.parse(vehicleData);
-    return vehicleObject.name;
-  });
-  console.log(vehiclesNames);
+  try {
+    const luke = await callSwapi('people/1');
+    const lukeObject = JSON.parse(luke);
+    const vehiclesArray = lukeObject.vehicles;
+    const vehiclesUrls = vehiclesArray.map((vehicle) => {
+      return vehicle.slice(21);
+    });
+    let vehicles = vehiclesUrls.map((url) => {
+      return callSwapi(url);
+    });
+    const vehiclesData = await Promise.all(vehicles);
+    let vehiclesNames = vehiclesData.map((vehicleData) => {
+      let vehicleObject = JSON.parse(vehicleData);
+      return vehicleObject.name;
+    });
+    console.log(vehiclesNames);
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
 run();
