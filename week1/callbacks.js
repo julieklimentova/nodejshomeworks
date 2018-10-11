@@ -2,7 +2,7 @@
  * @overview  callbacks.js
  */
 
-const request = require('request-promise');
+const request = require('request');
 
 const BASE_URL = 'http://swapi.co/api/';
 
@@ -24,7 +24,7 @@ callSwapi('people/1', (err, response, body) => {
      let vehicleName = vehicleResult.name;
      console.log(vehicleName);
    })
- });
+ })
 });
 
 
