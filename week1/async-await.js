@@ -18,12 +18,12 @@ async function run() {
     const vehiclesUrls = vehiclesArray.map((vehicle) => {
       return vehicle.slice(21);
     });
-    let vehicles = vehiclesUrls.map((url) => {
+    const vehicles = vehiclesUrls.map((url) => {
       return callSwapi(url);
     });
     const vehiclesData = await Promise.all(vehicles);
-    let vehiclesNames = vehiclesData.map((vehicleData) => {
-      let vehicleObject = JSON.parse(vehicleData);
+    const vehiclesNames = vehiclesData.map((vehicleData) => {
+      const vehicleObject = JSON.parse(vehicleData);
       return vehicleObject.name;
     });
     console.log(vehiclesNames);
