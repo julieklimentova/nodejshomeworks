@@ -4,27 +4,25 @@
 
 const request = require('request');
 
-const BASE_URL = 'http://swapi.co/api/';
-
-function callSwapi(specificUrl, callback) {
-  const SPECIFICURL = specificUrl;
-  const err = "Something bad happened.";
-  request.get(`${BASE_URL}${SPECIFICURL}`, callback);
+function callSwapi(url, callback) {
+  request.get(`${url}`, callback);
 }
 
-callSwapi('people/1', (err, response, body) => {
+callSwapi('http://swapi.co/api/people/1', (err, response, body) => {
   let vehiclesURLS;
+  if (err) {
+    console.log(`Something went wrong`, err);
+    return;
+  }
   if (body !== null && body !== undefined && body !== "") {
     vehiclesURLS = JSON.parse(body).vehicles;
   }
-  const vehiclesSpecific = vehiclesURLS.map((el) => {
-    return el.slice(21);
-  });
-
-  vehiclesSpecific.map((spec) => {
+  vehiclesURLS.map((spec) => {
     callSwapi(spec, (err, response, body) => {
-      let vehicleResult = JSON.parse(body);
-      let vehicleName = vehicleResult.name;
+      let vehicleName;
+      if (body !== null && body !== undefined && body !== "") {
+        vehicleName = JSON.parse(body).name;
+      }
       console.log(vehicleName);
     })
   })

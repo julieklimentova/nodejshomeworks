@@ -4,56 +4,34 @@
 
 const rp = require('request-promise');
 
-const BASE_URL = 'http://swapi.co/api/';
-
-function callSwapi(subUrl) {
-  return rp(`${BASE_URL}${subUrl}`);
+function callSwapi(url) {
+  return rp(`${url}`);
 }
 
 async function run() {
   try {
-    const luke = await callSwapi('people/1');
-    const lukeObject = JSON.parse(luke);
-    const vehiclesArray = lukeObject.vehicles;
-    const vehiclesUrls = vehiclesArray.map((vehicle) => {
-      return vehicle.slice(21);
-    });
+    let lukeObject;
+    const luke = await callSwapi('http://swapi.co/api/people/1');
+    if (luke !== undefined && luke !== null && luke !== '') {
+      lukeObject = JSON.parse(luke);
+    }
+    const vehiclesUrls = lukeObject.vehicles;
     const vehicles = vehiclesUrls.map((url) => {
       return callSwapi(url);
     });
     const vehiclesData = await Promise.all(vehicles);
     const vehiclesNames = vehiclesData.map((vehicleData) => {
-      const vehicleObject = JSON.parse(vehicleData);
-      return vehicleObject.name;
+      if (vehicleData !== undefined && vehicleData !== null && vehicleData !== '') {
+        const vehicleObject = JSON.parse(vehicleData);
+        console.log(vehicleObject.name);
+        return vehicleObject.name;
+      }
     });
     console.log(vehiclesNames);
   }
   catch(err) {
-    console.log(err);
+    console.log("Something went wrong", err);
   }
 }
 
 run();
-
-/*async function run() {
-
-  const data = await callApi('api.google.com')
-  // Context is automatically loaded here
-  console.log(data)
-  const innerData = await callApi('api.microsoft.com')
-  console.log(innerData)
-  const subData = await callApi('api.apple.com')
-  console.log(`${data}, ${subData}`)
-
-  // We can await all at once
-
-  const [data, innerData, subData] = await Promise.all([
-    callApi('api.google.com'),
-    callApi('api.microsoft.com'),
-    callApi('api.apple.com')
-})
-
-console.log(data)
-console.log(innerData)
-console.log(`${data}, ${subData}`)
-}*/

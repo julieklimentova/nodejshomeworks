@@ -5,36 +5,35 @@
 
 const rp = require('request-promise');
 
-const BASE_URL = 'http://swapi.co/api/';
 
-function callSwapi(specificUrl) {
-  const SPECIFICURL = specificUrl;
-  return rp(`${BASE_URL}${SPECIFICURL}`);
+function callSwapi(url) {
+  return rp(`${url}`);
 }
 
 
-callSwapi('people/1')
+callSwapi('http://swapi.co/api/people/1')
   .then((result) => {
-    let luke = JSON.parse(result);
-    let vehicles = luke.vehicles;
-    return vehicles.map((url) => {
-      return url.slice(21);
-    });
-  }).then((vehiclesUrls) => {
-  return vehiclesUrls.map((subUrl) => {
-    return callSwapi(subUrl);
+    if (result !== null && result !== undefined && result !== '') {
+     return JSON.parse(result).vehicles;
+    }
+  }).then((lukesVehicles) => {
+    console.log(lukesVehicles);
+  return lukesVehicles.map((url) => {
+    return callSwapi(url);
   });
 }).then((vehiclesPromises) => {
     return Promise.all(vehiclesPromises)
   }
 ).then((vehiclesArray) => {
-  let vehiclesNames = vehiclesArray.map((vehicle) => {
-    let vehicleObject = JSON.parse(vehicle);
-    console.log(vehicleObject.name);
-    return vehicleObject.name;
+  const vehiclesNames = vehiclesArray.map((vehicle) => {
+    if (vehicle !== null && vehicle !== undefined && vehicle !== '') {
+      const vehicleObject = JSON.parse(vehicle);
+      console.log(vehicleObject.name);
+      return vehicleObject.name;
+    }
   });
   console.log(vehiclesNames);
   return vehiclesNames;
 }).catch((err) => {
-  console.log(err);
+  console.log("Something went wrong", err.statusCode, err);
 });
